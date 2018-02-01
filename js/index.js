@@ -47,7 +47,10 @@ $(function(){
       ctx.strokeText('车',40,20);
     }
     drowText:function(textArr){
-      
+      var name,i;
+      for(name in textArr){
+        this.ctx.strokeText(textArr[name][0],textArr[name][1],textArr[name][2]);
+      }
     }
   });
 
