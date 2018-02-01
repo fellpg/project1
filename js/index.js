@@ -46,6 +46,9 @@ $(function(){
       ctx.textBaseline = 'middle';
       ctx.strokeText('车',40,20);
     }
+    drowText:function(textArr){
+      
+    }
   });
 
   window.Chess = Chess;
