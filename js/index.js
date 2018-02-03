@@ -9,42 +9,43 @@ $(function(){
     this.drowBgc();
     // this.drowChess();
     this.drowText(this.textArr);
+    this.move();
   }
   extend(Chess.prototype,{
     textArr:{
-      red车1:['red','车',40,20],
-      red马1:['red','马',80,20],
-      red象1:['red','象',120,20],
-      red士1:['red','士',160,20],
-      red帅 :['red','帅',200,20],    
-      red士2:['red','士',240,20],
-      red象2:['red','象',280,20],
-      red马2:['red','马',320,20],
-      red车2:['red','车',360,20],
-      red炮1:['red','炮',80,100],
-      red炮2:['red','炮',320,100],
-      red兵1:['red','兵',40,140],
-      red兵2:['red','兵',120,140],
-      red兵3:['red','兵',200,140],
-      red兵4:['red','兵',280,140],
-      red兵5:['red','兵',360,140],
+      red车1:['red','车',0,0],
+      red马1:['red','马',1,0],
+      red象1:['red','象',2,0],
+      red士1:['red','士',3,0],
+      red帅 :['red','帅',4,0],    
+      red士2:['red','士',5,0],
+      red象2:['red','象',6,0],
+      red马2:['red','马',7,0],
+      red车2:['red','车',8,0],
+      red炮1:['red','炮',1,2],
+      red炮2:['red','炮',7,2],
+      red兵1:['red','兵',0,3],
+      red兵2:['red','兵',2,3],
+      red兵3:['red','兵',4,3],
+      red兵4:['red','兵',6,3],
+      red兵5:['red','兵',8,3],
 
-      black车1:['black','車',40,380],
-      black马1:['black','马',80,380],
-      black象1:['black','象',120,380],
-      black士1:['black','士',160,380],
-      black帅 :['black','将',200,380],    
-      black士2:['black','士',240,380],
-      black象2:['black','象',280,380],
-      black马2:['black','马',320,380],
-      black车2:['black','車',360,380],
-      black炮1:['black','炮',80,300],
-      black炮2:['black','炮',320,300],
-      black兵1:['black','卒',40,260],
-      black兵2:['black','卒',120,260],
-      black兵3:['black','卒',200,260],
-      black兵4:['black','卒',280,260],
-      black兵5:['black','卒',360,260],
+      black车1:['black','車',0,9],
+      black马1:['black','马',1,9],
+      black象1:['black','象',2,9],
+      black士1:['black','士',3,9],
+      black帅 :['black','将',4,9],    
+      black士2:['black','士',5,9],
+      black象2:['black','象',6,9],
+      black马2:['black','马',7,9],
+      black车2:['black','車',8,9],
+      black炮1:['black','炮',1,7],
+      black炮2:['black','炮',7,7],
+      black兵1:['black','卒',0,6],
+      black兵2:['black','卒',2,6],
+      black兵3:['black','卒',4,6],
+      black兵4:['black','卒',6,6],
+      black兵5:['black','卒',8,6],
     },
     drowBgc:function(){
       var ctx = this.ctx;
@@ -80,12 +81,47 @@ $(function(){
       var name,i; var ctx = this.ctx;
       for(name in textArr){
         ctx.beginPath();
-        this.drowChess(textArr[name][2],textArr[name][3]);
+        this.drowChess(toggleX(textArr[name][2]),toggleY(textArr[name][3]));
         ctx.font='  15px Simsun,arial,sans-serif'
         ctx.strokeStyle=textArr[name][0];
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        this.ctx.strokeText(textArr[name][1],textArr[name][2],textArr[name][3]);
+        this.ctx.strokeText(textArr[name][1],toggleX(textArr[name][2]),toggleY(textArr[name][3]));
+      }
+    },
+    move:function(){
+      var aaa = this;
+      this.ctx.canvas.onclick=function(e){
+        var ZB = aaa.textArr;
+        for(every in ZB){
+          if(ZB[every][2]==Math.round((e.offsetX-40)/40)&&ZB[every][3]==Math.round((e.offsetY-20)/40)){
+            // console.log(every);
+            // console.log('选中棋子'+ZB[every][0]+ZB[every][1]);
+            aaa.ctx.canvas.onclick=null;
+            (function(every){
+              aaa.ctx.canvas.onclick=function(e){
+                switch(ZB[every][1]){
+                  case '車':
+                  if(ZB[every][2]==Math.round((e.offsetX-40)/40)||ZB[every][3]==Math.round((e.offsetY-20)/40)){
+                    ZB[every][2]=Math.round((e.offsetX-40)/40);
+                    ZB[every][3]=Math.round((e.offsetY-20)/40);
+                    aaa.ctx.canvas.onclick=null;
+                    aaa.ctx.fillRect(0,0,400,400);
+                    aaa.drowBgc();
+                    aaa.drowText(ZB);
+                    aaa.move();
+                  }else{
+                    alert('注意规则');
+                  }
+                  break;
+                  case '车':
+                  
+                  break;
+                }
+              }
+            })(every);
+          }
+        }
       }
     }
   });
@@ -93,10 +129,18 @@ $(function(){
   window.Chess = Chess;
 })(window);
 
+// 继承
 function extend(obj1,obj2){
   for(var name in obj2){
     if(!obj1[name]){
       obj1[name]=obj2[name];
     }
   }
+}
+// 转换位置
+function toggleX(num){
+  return num*40+40;
+}
+function toggleY(num){
+  return num*40+20;
 }
