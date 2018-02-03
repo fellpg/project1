@@ -100,23 +100,62 @@ $(function(){
             aaa.ctx.canvas.onclick=null;
             (function(every){
               aaa.ctx.canvas.onclick=function(e){
-                switch(ZB[every][1]){
-                  case '車':
-                  if(ZB[every][2]==Math.round((e.offsetX-40)/40)||ZB[every][3]==Math.round((e.offsetY-20)/40)){
-                    ZB[every][2]=Math.round((e.offsetX-40)/40);
-                    ZB[every][3]=Math.round((e.offsetY-20)/40);
-                    aaa.ctx.canvas.onclick=null;
-                    aaa.ctx.fillRect(0,0,400,400);
-                    aaa.drowBgc();
-                    aaa.drowText(ZB);
-                    aaa.move();
-                  }else{
-                    alert('注意规则');
+                var X=Math.round((e.offsetX-40)/40);
+                var Y=Math.round((e.offsetY-20)/40);
+                for(var name in ZB){
+                  if(ZB[name][2]==X&&ZB[name][3]==Y){
+                    if(aaa.textArr[every][0]!=aaa.textArr[name][0]){
+                      delete aaa.textArr[name];
+                      drow(aaa);
+                    }else{
+                      alert('不能杀自己人');
+                      drow(aaa);
+                      return null;
+                    }
                   }
-                  break;
-                  case '车':
-                  
-                  break;
+                }
+                if((
+                    ZB[every][1]=='车'||
+                    ZB[every][1]=='車'||
+                    ZB[every][1]=='兵'||
+                    ZB[every][1]=='卒'||
+                    ZB[every][1]=='炮'||
+                    ZB[every][1]=='将'||
+                    ZB[every][1]=='帅'
+                    )&&(
+                    ZB[every][2]==X||
+                    ZB[every][3]==Y
+                  )){
+                    ZB[every][2]=X;
+                    ZB[every][3]=Y;
+                    drow(aaa);
+                }else if(
+                  ZB[every][1]=='马'&&
+                  Math.abs(ZB[every][2]-X)+
+                  Math.abs(ZB[every][3]-Y)==3
+                  ){
+                    ZB[every][2]=X;
+                    ZB[every][3]=Y;
+                    drow(aaa);
+                }else if(
+                  ZB[every][1]=='象'&&
+                  Math.abs(ZB[every][2]-X)+
+                  Math.abs(ZB[every][3]-X)==4
+                  ){
+                    ZB[every][2]=X;
+                    ZB[every][3]=X;
+                    drow(aaa);
+                }else if(
+                  ZB[every][1]=='士'&&
+                  Math.abs(ZB[every][2]-X)+
+                  Math.abs(ZB[every][3]-X)==2
+                  ){
+                    ZB[every][2]=X;
+                    ZB[every][3]=X;
+                    drow(aaa);
+                }else{
+                  drow(aaa);
+                  alert('注意规则');
                 }
               }
             })(every);
@@ -125,7 +164,6 @@ $(function(){
       }
     }
   });
-
   window.Chess = Chess;
 })(window);
 
@@ -143,4 +181,12 @@ function toggleX(num){
 }
 function toggleY(num){
   return num*40+20;
+}
+// 绘制棋盘棋子
+function drow(aaa){
+  aaa.ctx.canvas.onclick=null;
+  aaa.ctx.fillRect(0,0,400,400);
+  aaa.drowBgc();
+  aaa.drowText(aaa.textArr);
+  aaa.move();
 }
